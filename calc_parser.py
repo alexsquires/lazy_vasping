@@ -1,0 +1,67 @@
+import time, os
+from pymatgen.io.vasp import Contcar, Xdatcar
+
+def assess_stdout(directory):
+    """
+    Parses the std_out (it is assumed it is named "vasp_out") and reports any found errors.
+    """
+    with open('/home/mmm0558/templates/errors.yaml') as all_errors:
+        all_errors = yaml.load(all_errors)
+    errors = []
+    errors_subset_to_catch = list(all_errors.keys())
+    with open(f'{directory}/vasp_out') as handler:
+        for line in tqdm(handler):
+            l = line.strip()  #pylint: disable=invalid-name
+            for err, msgs in all_errors.items():
+                for msg in msgs:
+                    if l.find(msg) != -1:
+                        errors.append(err)
+    #if any(errors) == False:
+    #    errors = False
+    return errors
+  
+def file_age(filepath):
+    """
+    given a file, determines the last time that file was updated in seconds
+    args:
+        - filepath (str): path to file
+    returns:
+        - time (float): time since file last modified in seconds
+    """
+    time = time.time() - os.path.getmtime(filepath)
+    return time
+  
+def assess_CONTCAR(directory):
+  """
+  asseses whether a directory contains a properly formatted vasp contcar
+  args:
+      - directory (str): directory to check for CONTCAR
+  returns:
+      - contcar (bool): whether the directory contains a readable CONTCAR
+  """
+    if os.path.exists(f'{directory}/CONTCAR'):
+        try:
+            Poscar.from_file(f'{directory}/CONTCAR')
+            contcar = True
+        except:
+            contcar = False
+    else:
+        contcar = False
+    return contcar
+  
+def assess_XDATCAR(directory):
+  """
+  reports how many ionic steps a calculation has run for by reading the XDATCAR
+  args:
+      - directory (str): directory to check for XDATCAR
+  returns:
+      - xdatcar (int): the number of steps saved to the XDATCAR
+  """
+    if os.path.exists(f'{directory}/XDATCAR'):
+        try:
+            xdatcar = len(Xdatcar(f'{directory}/XDATCAR').structures)
+        except:
+            xdatcar = None
+    else:
+        xdatcar = None
+    return xdatcar
