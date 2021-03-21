@@ -1,0 +1,11 @@
+  ALGO: Normal
+  EDIFF: 1.0e-06
+  EDIFFG: -0.01
+  LASPH: true
+  LORBIT: 11
+  NELM: 200
+  NELMIN: 6
+  PREC: Accurate
+  ISMEAR: 0 
+  SIGMA: 0.05
+  KGAMMA: true
