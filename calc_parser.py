@@ -1,5 +1,5 @@
 import time, os
-from pymatgen.io.vasp import Contcar, Xdatcar
+from pymatgen.io.vasp import Poscar, Xdatcar, Vasprun
 
 def assess_stdout(directory):
     """
@@ -51,7 +51,7 @@ def assess_CONTCAR(directory):
   
 def assess_XDATCAR(directory):
   """
-  reports how many ionic steps a calculation has run for by reading the XDATCAR
+  reports how many ionic steps a calculation has run for by reading the XDATCAR (cannot always rely on vasprun, as it is unreadable if the caluclation is unfinished)
   args:
       - directory (str): directory to check for XDATCAR
   returns:
@@ -65,3 +65,20 @@ def assess_XDATCAR(directory):
     else:
         xdatcar = None
     return xdatcar
+
+def assess_vasprun(directory):
+    """
+    checks whether calculations completed, and converged
+    args:
+      - directory (str): directory to check for vasprun.xml
+    returns:
+      - contcar (bool): whether the directory contains a converged vasprun
+    """
+    if os.path.exists(f'{directory}/vasprun.xml'):
+        try:
+            vasprun = Vasprun(f'{directory}/vasprun.xml', parse_eigen=False, parse_dos=False).converged
+        except:
+            vasprun = False
+    else:
+        vasprun = False
+    return vasprun
