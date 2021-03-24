@@ -1,4 +1,6 @@
 import time, os
+import numpy as np
+from vasppy.summary import find_vasp_calculations
 from pymatgen.io.vasp import Poscar, Xdatcar, Vasprun
 
 def assess_stdout(directory):
@@ -19,6 +21,16 @@ def assess_stdout(directory):
     #if any(errors) == False:
     #    errors = False
     return errors
+
+def assess_OUTCAR(directory):
+    if os.path.exists(f'{directory}/OUTCAR'):
+        try:
+            outcar = file_age(f'{directory}/OUTCAR')
+        except:
+            outcar = None
+    else:
+        outcar = None
+    return outcar
   
 def file_age(filepath):
     """
@@ -39,15 +51,15 @@ def assess_CONTCAR(directory):
   returns:
       - contcar (bool): whether the directory contains a readable CONTCAR
   """
-    if os.path.exists(f'{directory}/CONTCAR'):
-        try:
-            Poscar.from_file(f'{directory}/CONTCAR')
-            contcar = True
-        except:
-            contcar = False
-    else:
-        contcar = False
-    return contcar
+  if os.path.exists(f'{directory}/CONTCAR'):
+      try:
+          Poscar.from_file(f'{directory}/CONTCAR')
+          contcar = True
+      except:
+          contcar = False
+  else:
+      contcar = False
+  return contcar
   
 def assess_XDATCAR(directory):
   """
@@ -57,14 +69,14 @@ def assess_XDATCAR(directory):
   returns:
       - xdatcar (int): the number of steps saved to the XDATCAR
   """
-    if os.path.exists(f'{directory}/XDATCAR'):
-        try:
-            xdatcar = len(Xdatcar(f'{directory}/XDATCAR').structures)
-        except:
-            xdatcar = None
-    else:
-        xdatcar = None
-    return xdatcar
+  if os.path.exists(f'{directory}/XDATCAR'):
+      try:
+          xdatcar = len(Xdatcar(f'{directory}/XDATCAR').structures)
+      except:
+          xdatcar = None
+  else:
+      xdatcar = None
+  return xdatcar
 
 def assess_vasprun(directory):
     """
@@ -82,3 +94,17 @@ def assess_vasprun(directory):
     else:
         vasprun = False
     return vasprun
+
+def parse_calcs():
+    calculation_status = {}
+    home = os.getcwd()
+    entries = []
+    calculations = find_vasp_calculations()
+    for calc_dir in calculations:
+        calc_status = {'converged':assess_vasprun(f'{home}/{calc_dir}'),
+                       'errors':assess_stdout(f'{home}/{calc_dir}'), 
+                       'contcar':assess_CONTCAR(f'{home}/{calc_dir}'),
+                       'ionic_steps':assess_XDATCAR(f'{home}/{calc_dir}'),
+                       'last_updated': assess_OUTCAR(f'{home}/{calc_dir}')}
+        calculation_status.update({calc_dir:calc_status})
+    np.savetext('calc_data.csv')
