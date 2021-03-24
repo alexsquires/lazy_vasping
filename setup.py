@@ -14,6 +14,8 @@ def readme():
     with open("README.md") as readme_file:
         return readme_file.read()
 
+scripts = ['lv_parse', 'lv_wrangle']
+    
 setup(
     name="lazy_vasping",
     packages=find_packages(),
@@ -40,5 +42,5 @@ setup(
         "Topic :: Scientific/Engineering :: Chemistry",
     ],
     license="MIT",
-    scripts=glob.glob(os.path.join(SETUP_PTH, "scripts", "*")),
+    entry_points={'console_scripts':['{} = cli.{}:main'.format(s) for s in scripts]}),
 )
