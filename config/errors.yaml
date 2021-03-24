@@ -1,0 +1,71 @@
+aliasing:
+- 'WARNING: small aliasing (wrap around) errors must be expected'
+aliasing_incar:
+- 'Your FFT grids (NGX,NGY,NGZ) are not sufficient for an accurate'
+amin:
+- 'One of the lattice vectors is very long (>50 A), but AMIN'
+brions:
+- 'BRIONS problems: POTIM should be increased'
+brmix:
+- 'BRMIX: very serious problems'
+dentet:
+- 'DENTET'
+edddav:
+- 'Error EDDDAV: Call to ZHEGV failed'
+eddrmm:
+- 'WARNING in EDDRMM: call to ZHEGV failed'
+elf_kpar:
+- 'ELF: KPAR>1 not implemented'
+elf_ncl:
+- 'WARNING: ELF not implemented for non collinear case'
+grad_not_orth:
+- 'EDWAV: internal error, the gradient is not orthogonal'
+incorrect_shift:
+- 'Could not get correct shifts'
+inv_rot_mat:
+- 'inverse of rotation matrix was not found (increase SYMPREC)'
+lreal:
+- 'Therefore set LREAL=.FALSE. in the  INCAR file'
+nicht_konv:
+- 'ERROR: SBESSELITER : nicht konvergent'
+point_group:
+- 'Error: point group operation missing'
+posmap:
+- 'POSMAP internal error: symmetry equivalent atom not found'
+pricel:
+- 'internal error in subroutine PRICEL'
+pssyevx:
+- 'ERROR in subspace rotation PSSYEVX'
+real_optlay:
+- 'REAL_OPTLAY: internal error'
+- 'REAL_OPT: internal ERROR'
+rhosyg:
+- 'RHOSYG internal error'
+rot_matrix:
+- 'Found some non-integer element in rotation matrix'
+rspher:
+- 'ERROR RSPHER'
+- 'RSPHER: internal ERROR:'
+rsphere:
+- 'RSPHER: internal ERROR'
+subspacematrix:
+- 'WARNING: Sub-Space-Matrix is not hermitian in DAV'
+tet:
+- 'Tetrahedron method fails for NKPT<4'
+- 'Fatal error detecting k-mesh'
+- 'Fatal error: unable to match k-point'
+- 'Routine TETIRR needs special values'
+- 'Tetrahedron method fails (number of k-points < 4)'
+tetirr:
+- 'Routine TETIRR needs special values'
+too_few_bands:
+- 'TOO FEW BANDS'
+triple_product:
+- 'ERROR: the triple product of the basis vectors'
+zbrent:
+- 'ZBRENT: fatal internal in'
+- 'ZBRENT: fatal error in bracketing'
+zheev:
+- 'ERROR EDDIAG: Call to routine ZHEEV failed!'
+zpotrf:
+- 'LAPACK: Routine ZPOTRF failed'
