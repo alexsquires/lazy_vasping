@@ -1,11 +1,15 @@
-import time, os
-import numpy as np
+import time, os, yaml
+import pandas as pd
 from vasppy.summary import find_vasp_calculations
 from pymatgen.io.vasp import Poscar, Xdatcar, Vasprun
 
 def assess_stdout(directory):
     """
     Parses the std_out (it is assumed it is named "vasp_out") and reports any found errors.
+    args:
+        - directory (str): directory to look for "vasp_out"
+    returnes:
+        - errors (list): list of error codes
     """
     with open('/home/mmm0558/templates/errors.yaml') as all_errors:
         all_errors = yaml.load(all_errors)
@@ -21,16 +25,6 @@ def assess_stdout(directory):
     #if any(errors) == False:
     #    errors = False
     return errors
-
-def assess_OUTCAR(directory):
-    if os.path.exists(f'{directory}/OUTCAR'):
-        try:
-            outcar = file_age(f'{directory}/OUTCAR')
-        except:
-            outcar = None
-    else:
-        outcar = None
-    return outcar
   
 def file_age(filepath):
     """
@@ -42,6 +36,23 @@ def file_age(filepath):
     """
     time = time.time() - os.path.getmtime(filepath)
     return time
+
+def assess_OUTCAR(directory):
+  """
+  asseses whether a directory contains an OUTCAR file
+  args:
+      - directory (str): directory to check for OUTCAR
+  returns:
+      - outcar_update_time (float): time in seconds since the OUTCAR was modified
+  """
+    if os.path.exists(f'{directory}/OUTCAR'):
+        try:
+            outcar_update_time = file_age(f'{directory}/OUTCAR')
+        except:
+            outcar_update_time = None
+    else:
+        outcar_update_time = None
+    return outcar
   
 def assess_CONTCAR(directory):
   """
@@ -96,6 +107,14 @@ def assess_vasprun(directory):
     return vasprun
 
 def parse_calcs():
+    """
+    find all vasp caluclations in directories "below" current directory and generate a ".csv"
+    summarising the status of these calculations ("calc_data.csv")
+    args:
+        - None
+    returns:
+       - None
+    """
     calculation_status = {}
     home = os.getcwd()
     entries = []
