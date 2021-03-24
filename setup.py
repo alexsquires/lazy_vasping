@@ -42,5 +42,5 @@ setup(
         "Topic :: Scientific/Engineering :: Chemistry",
     ],
     license="MIT",
-    entry_points={'console_scripts':['{} = cli.{}:main'.format(s) for s in scripts]}),
+    entry_points={'console_scripts':[f'{s} = cli.{s}:main' for s in scripts]}
 )

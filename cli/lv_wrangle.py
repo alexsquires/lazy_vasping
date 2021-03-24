@@ -5,7 +5,7 @@ from lazy_vasping.calc_wrangling import wrangle_incar
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-d', '--directories', default='all', type=list
+    parser.add_argument('-d', '--directories', default='all', type=list,
                         help='directories (containing INCARs) to edit')
     parser.add_argument('-p', '--params', type=dict,
                         help='dictionary of parameters to update')

@@ -1,5 +1,6 @@
 import time, os, yaml
 import pandas as pd
+from tqdm import tqdm
 from vasppy.summary import find_vasp_calculations
 from pymatgen.io.vasp import Poscar, Xdatcar, Vasprun
 
@@ -16,14 +17,12 @@ def assess_stdout(directory):
     errors = []
     errors_subset_to_catch = list(all_errors.keys())
     with open(f'{directory}/vasp_out') as handler:
-        for line in tqdm(handler):
-            l = line.strip()  #pylint: disable=invalid-name
+        for line in handler:
+            l = line.strip() 
             for err, msgs in all_errors.items():
                 for msg in msgs:
                     if l.find(msg) != -1:
                         errors.append(err)
-    #if any(errors) == False:
-    #    errors = False
     return errors
   
 def file_age(filepath):
@@ -38,13 +37,13 @@ def file_age(filepath):
     return time
 
 def assess_OUTCAR(directory):
-  """
-  asseses whether a directory contains an OUTCAR file
-  args:
-      - directory (str): directory to check for OUTCAR
-  returns:
-      - outcar_update_time (float): time in seconds since the OUTCAR was modified
-  """
+    """
+    asseses whether a directory contains an OUTCAR file
+    args:
+        - directory (str): directory to check for OUTCAR
+    returns:
+        - outcar_update_time (float): time in seconds since the OUTCAR was modified
+    """
     if os.path.exists(f'{directory}/OUTCAR'):
         try:
             outcar_update_time = file_age(f'{directory}/OUTCAR')
@@ -52,7 +51,7 @@ def assess_OUTCAR(directory):
             outcar_update_time = None
     else:
         outcar_update_time = None
-    return outcar
+    return outcar_update_time
   
 def assess_CONTCAR(directory):
   """
@@ -119,7 +118,7 @@ def parse_calcs():
     home = os.getcwd()
     entries = []
     calculations = find_vasp_calculations()
-    for calc_dir in calculations:
+    for calc_dir in tqdm(calculations):
         calc_status = {'converged':assess_vasprun(f'{home}/{calc_dir}'),
                        'errors':assess_stdout(f'{home}/{calc_dir}'),
                        'contcar':assess_CONTCAR(f'{home}/{calc_dir}'),
