@@ -102,9 +102,10 @@ def parse_calcs():
     calculations = find_vasp_calculations()
     for calc_dir in calculations:
         calc_status = {'converged':assess_vasprun(f'{home}/{calc_dir}'),
-                       'errors':assess_stdout(f'{home}/{calc_dir}'), 
+                       'errors':assess_stdout(f'{home}/{calc_dir}'),
                        'contcar':assess_CONTCAR(f'{home}/{calc_dir}'),
                        'ionic_steps':assess_XDATCAR(f'{home}/{calc_dir}'),
                        'last_updated': assess_OUTCAR(f'{home}/{calc_dir}')}
         calculation_status.update({calc_dir:calc_status})
-    np.savetext('calc_data.csv')
+    df = pd.DataFrame.from_dict(calculation_status, orient='index')
+    df.to_csv('calc_data.csv')
