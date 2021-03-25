@@ -14,7 +14,7 @@ def readme():
     with open("README.md") as readme_file:
         return readme_file.read()
 
-scripts = ['lv_parse', 'lv_wrangle']
+scripts = ['lv_parse', 'lv_wrangle', 'lv_submit']
     
 setup(
     name="lazy_vasping",

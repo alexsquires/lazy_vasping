@@ -4,4 +4,5 @@ lazy vasping is a _light weight_ approach to automating some things in [VASP](ht
 
 ### TODO:
 - check wrangler works
-- add job submit script
+- ~~add job submit script~~
+- implement calculation statistics viewer and "calc_obervations" file
