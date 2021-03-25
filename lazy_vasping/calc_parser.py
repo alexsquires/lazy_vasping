@@ -31,10 +31,10 @@ def file_age(filepath):
     args:
         - filepath (str): path to file
     returns:
-        - time (float): time since file last modified in seconds
+        - m_time (float): time since file last modified in seconds
     """
-    time = time.time() - os.path.getmtime(filepath)
-    return time
+    m_time = time.time() - os.path.getmtime(filepath)
+    return m_time
 
 def assess_OUTCAR(directory):
     """
