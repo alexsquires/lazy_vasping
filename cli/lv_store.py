@@ -1,28 +1,18 @@
-import pandas as pd
-from lazy_vasping.calc_submitting import restart_job, submit_job, find_new_vasp_calculations
+from lazy_vasping.calc_storage import calc_store
 import os
-
+import pandas as pd
+from tqdm import tqdm
 
 def main():
+    os.mkdir('vasp_store')
     df = pd.read_csv('calc_data.csv')
     converged = df['converged'] == True
-    not_converged = df['converged'] == False
-    contcar = df['contcar'] == True
-    not_contcar = df['contcar'] == False
-    many_steps = df['ionic_steps'] >= 10
-    not_running = df['last_updated'] >= 1800
-
-    home=os.getcwd()
-
-    to_restart = list(df[contcar & many_steps & not_running].iloc[:, 0]) + list(df[not_converged & contcar & not_running].iloc[:, 0])
-    to_submit = list(df[not_converged & not_contcar & not_running].iloc[:, 0]) + list(df[many_steps & not_running & not_contcar].iloc[:, 0])
- 
-    for directory in to_restart:
-        restart_job(directory)
-    for directory in to_submit:
-        submit_job(directory)
-    for directory in find_new_vasp_calculations():
-        submit_job(directory)
-
+    to_store = list(df[converged].iloc[:, 0]) 
+    to_store = [i[2:] for i in to_store] # cut "./" off the start of each file path
+    
+    for converged_calculation in tqdm(to_store): 
+        calc_store(converged_calculation,f'vasp_store/{converged_calculation}')
+       
+    print(f'{len(converged_calculations)} calculations stored')
 if __name__ == "__main__":
     main()

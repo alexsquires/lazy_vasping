@@ -16,24 +16,25 @@ def calc_store(init_directory, final_directory, files=['INCAR','POSCAR','OUTCAR'
     returns:
         - None
     """
-    os.mkdir(final_directory)
+    os.makedirs(final_directory)
  
     incar = Incar.from_file(f'{init_directory}/INCAR')
     for k in incar.keys():
         if k == 'KSPACING':
             kspacing = True
             break
-    if kspacing != True:
+        else:
+            kspacing = False
+    if kspacing == False:
         files += ['KPOINTS']
     
     if potcar_spec == True:
         potcar = Potcar.from_file(f'{init_directory}/POTCAR')
         spec = potcar.spec
-        with open('POTCAR_spec.yaml', 'w') as outfile:
+        with open(f'{init_directory}/POTCAR_spec.yaml', 'w') as outfile:
             yaml.dump(spec, outfile, default_flow_style=False)
         files += ['POTCAR_spec.yaml']
     else: 
-        files += ['POTCAR']
-    print(files)
+        files += ['POTCAR'] 
     for file_to_copy in files:
-        shutil.copy(file_to_copy, final_directory)
+        shutil.copy(f'{init_directory}/{file_to_copy}', final_directory)
