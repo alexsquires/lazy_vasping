@@ -32,6 +32,8 @@ setup(
     url="https://github.com/alexsquires/lazy_vasping",
     long_description=readme(),
     long_description_content_type="text/markdown",
+    package_data= {"lazy_vasping":["errors.yaml"]},
+    include_package_data = True,
     classifiers=[
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.8",

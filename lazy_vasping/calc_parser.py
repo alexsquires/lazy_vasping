@@ -3,6 +3,23 @@ import pandas as pd
 from tqdm import tqdm
 from vasppy.summary import find_vasp_calculations
 from pymatgen.io.vasp import Poscar, Xdatcar, Vasprun
+from pathlib import Path
+from monty.serialization import loadfn
+
+MODULE_DIR = Path(__file__).resolve().parent
+
+def load_yaml_config(fname):
+    config = loadfn(str(MODULE_DIR / ("%s" % fname)))
+    if "PARENT" in config:
+        parent_config = _load_yaml_config(config["PARENT"])
+        for k, v in parent_config.items():
+            if k not in config:
+                config[k] = v
+            elif isinstance(v, dict):
+                v_new = config.get(k, {})
+                v_new.update(v)
+                config[k] = v_new
+    return config
 
 def assess_stdout(directory):
     """
@@ -11,9 +28,8 @@ def assess_stdout(directory):
         - directory (str): directory to look for "vasp_out"
     returnes:
         - errors (list): list of error codes
-    """
-    with open('/home/mmm0558/templates/errors.yaml') as all_errors:
-        all_errors = yaml.load(all_errors)
+    """  
+    all_errors = load_yaml_config("errors.yaml")
     errors = []
     errors_subset_to_catch = list(all_errors.keys())
     with open(f'{directory}/vasp_out') as handler:
