@@ -14,6 +14,7 @@ def main():
     for converged_calculation in tqdm(to_scrape):
         vr = Vasprun(f'{converged_calculation}/vasprun.xml')
         entry = vr.get_computed_entry()
+        entry.entry_id = converged_calculation
         converged_calculations.append(entry.as_dict())
     
     with open('calculation_data.json', 'w') as calc_data:
