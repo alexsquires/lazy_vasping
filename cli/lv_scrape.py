@@ -1,4 +1,4 @@
-from pymatgen.io.vasp import Vasprun
+from pymatgen.io.vasp import Vasprun, Outcar
 import json
 import pandas as pd
 from tqdm import tqdm
@@ -12,10 +12,18 @@ def main():
 
     converged_calculations = []
     for converged_calculation in tqdm(to_scrape):
-        vr = Vasprun(f'{converged_calculation}/vasprun.xml')
+        vr = Vasprun(f'{converged_calculation}/vasprun.xml', parse_potcar_file=False)
+            
         entry = vr.get_computed_entry()
         entry.entry_id = converged_calculation
-        converged_calculations.append(entry.as_dict())
+        entry_dict = entry.as_dict()
+       
+        
+        if vr.parameters['LORBIT'] == 11:
+            outcar = Outcar(f'{converged_calculation}/OUTCAR')
+            entry_dict.update({'MAGMOMS': outcar.magnetization})
+        
+        converged_calculations.append(entry_dict)
 
     with open('calculation_data.json', 'w') as calc_data:
         json.dump(converged_calculations, calc_data)
