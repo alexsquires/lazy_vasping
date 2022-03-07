@@ -7,6 +7,7 @@ from setuptools import setup, find_packages
 
 SETUP_PTH = os.path.dirname(os.path.abspath(__file__))
 
+
 def readme():
     """
     Set GitHub repo README as package README.
@@ -14,7 +15,16 @@ def readme():
     with open("README.md") as readme_file:
         return readme_file.read()
 
-scripts = ['lv_static','lv_parse', 'lv_wrangle', 'lv_submit', 'lv_scrape', 'lv_store']
+
+scripts = [
+    "lv_rattle",
+    "lv_static",
+    "lv_parse",
+    "lv_wrangle",
+    "lv_submit",
+    "lv_scrape",
+    "lv_store",
+]
 
 setup(
     name="lazy_vasping",
@@ -32,8 +42,8 @@ setup(
     url="https://github.com/alexsquires/lazy_vasping",
     long_description=readme(),
     long_description_content_type="text/markdown",
-    package_data= {"lazy_vasping":["errors.yaml"]},
-    include_package_data = True,
+    package_data={"lazy_vasping": ["errors.yaml"]},
+    include_package_data=True,
     classifiers=[
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.8",
@@ -44,5 +54,5 @@ setup(
         "Topic :: Scientific/Engineering :: Chemistry",
     ],
     license="MIT",
-    entry_points={'console_scripts':[f'{s} = cli.{s}:main' for s in scripts]}
+    entry_points={"console_scripts": [f"{s} = cli.{s}:main" for s in scripts]},
 )
