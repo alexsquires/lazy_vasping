@@ -25,7 +25,8 @@ scripts = [
     "lv_scrape",
     "lv_store",
     "lv_recover",
-    "lv_report"
+    "lv_report",
+    "lv_hygam"
 ]
 
 setup(
