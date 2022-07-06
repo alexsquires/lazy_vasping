@@ -24,6 +24,8 @@ scripts = [
     "lv_submit",
     "lv_scrape",
     "lv_store",
+    "lv_recover",
+    "lv_report"
 ]
 
 setup(
