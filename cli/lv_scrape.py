@@ -2,13 +2,15 @@ from pymatgen.io.vasp import Vasprun, Outcar
 import json
 import pandas as pd
 import argparse
+import numpy as np
 from tqdm import tqdm
-
 
 def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', '--force')
+    parser.add_argument('-d', '--dos')
+    parser.add_argument("-ei", "--eps_i") 
     args = parser.parse_args()
 
     df = pd.read_csv('calc_data.csv')
@@ -23,8 +25,13 @@ def main():
     converged_calculations = []
     for converged_calculation in tqdm(to_scrape): 
         vr = Vasprun(f'{converged_calculation}/vasprun.xml', parse_potcar_file=False)
-         
-        entry = vr.get_computed_entry(data = ['incar'])
+        
+        data = ["incar"]
+        if args.dos:
+           data.append("complete_dos")
+        if args.eps_i:
+           data.append("epsilon_ionic")
+        entry = vr.get_computed_entry(data = data)
         entry.entry_id = converged_calculation
         entry_dict = entry.as_dict()
         
@@ -32,6 +39,12 @@ def main():
             outcar = Outcar(f'{converged_calculation}/OUTCAR')
             entry_dict.update({'MAGMOMS': outcar.magnetization})
         
+        if vr.parameters["LOPTICS"] == True:
+            outcar = Outcar(f'{converged_calculation}/OUTCAR')
+            outcar.read_freq_dielectric()
+            eps_elec = np.real(outcar.dielectric_tensor_function[0]).tolist()
+            entry_dict.update({'eps': eps_elec}) 
+            
         converged_calculations.append(entry_dict)
 
     with open('calculation_data.json', 'w') as calc_data:

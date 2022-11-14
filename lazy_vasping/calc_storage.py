@@ -38,3 +38,4 @@ def calc_store(init_directory, final_directory, files=['INCAR','POSCAR','OUTCAR'
         files += ['POTCAR'] 
     for file_to_copy in files:
         shutil.copy(f'{init_directory}/{file_to_copy}', final_directory)
+    shutil.rmtree(init_directory)
